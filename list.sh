@@ -26,15 +26,15 @@ EOF
      echo "$(tput setaf 1)Implemented by: Mohamed Esmael & Hadeer Al-Bttal$(tput setaf 0)"
 
      tput setaf 2; 
-
-     echo "╔═══════════════════════════╗"
-     echo "║ 1 - Create Database       ║"
-     echo "║ 2 - List Databases        ║"
-     echo "║ 3 - Connect Database      ║"
-     echo "║ 4 - Drop Database         ║"
-     echo "║ 5 - Exit                  ║"
-     echo "╚═══════════════════════════╝"
-
+	 cat <<EOF
+     	╔═══════════════════════════╗
+    	║ 1 - Create Database       ║
+     	║ 2 - List Databases        ║
+     	║ 3 - Connect Database      ║
+     	║ 4 - Drop Database         ║
+     	║ 5 - Exit                  ║
+     	╚═══════════════════════════╝
+EOF
 
      tput setaf 7; 
      echo -n "$(tput setaf 5)Select : $(tput setaf 7)"
