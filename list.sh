@@ -40,9 +40,9 @@ EOF
      echo -n "$(tput setaf 5)Select : $(tput setaf 7)"
      read Select
      case $Select in
-        1) . ./reate_db.sh ;;
+        1) . ./Create_Database.sh ;;
         2) ls Database 2>> error.log || echo "No Databases Found" ;;
-        3) . ./connect_db.sh ;;
+        3) . ./Connect_Database.sh ;;
         4) . ./Drop_Database.sh ;;
         5) exit ;;
         *) echo -e "\n Invalid Selection (-_-;)・・・ \n" ;;
