@@ -22,7 +22,7 @@ function update_and_check() {
 }
 
 function select_and_check() {
-    (../../Select.sh "$1")
+    (../../Select_From_Table.sh "$1")
     result=$?
     if ((result == 1)); then
         echo "Error: Select failed. Check the logs."
@@ -85,7 +85,7 @@ EOF
     case $selection in
     1) 
         echo "You selected Create Database "
-        create_with_check "$db_name" ;;
+        create_and_check "$db_name" ;;
     2) 
         echo "You selected List Databases "
         ls ;;
