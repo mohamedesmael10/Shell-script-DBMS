@@ -54,6 +54,7 @@ EOF
 			. ./Drop_Database.sh ;;
         5) 
 			echo "You selected Exit "
+			echo "$(tput setaf 6)Goodbye ヽ(･_･ ) (･_･)/ "
 			exit ;;
         *) echo -e "\n Invalid Selection (-_-;)・・・ \n" ;;
      esac 
