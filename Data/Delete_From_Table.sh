@@ -55,11 +55,12 @@ function execute_sql_delete(){
 clear
 db_name=$1
 while true; do
-    tput setaf 2
+    tput setaf 2 #change font color to Green
+     #  ╔═════════════════════════════════╗
+     #	║   ║
+     #	╚═════════════════════════════════╝
+    Database_connected "$db_name" 
     cat <<EOF
-     	╔═══════════════════════════╗
-    	║ $db_name Connected        ║
-     	╚═══════════════════════════╝
         ╔══════════════════════════════════════════════════════════════════════╗
         ║    e.g. DELETE FROM table_name WHERE column[==,<,>,>=,<=]value;      ║
         ║    DELETE FROM table_name;                                           ║                                                              

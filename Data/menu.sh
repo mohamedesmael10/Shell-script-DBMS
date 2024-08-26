@@ -65,9 +65,13 @@ db_name=$1
 while true; do
     tput setaf 2 
     echo "═══════════════════════════"
-    Database_connected $db_name
-   
+     #  ╔═════════════════════════════════╗
+     #	║   ║
+     #	╚═════════════════════════════════╝
+    Database_connected "$db_name" 
+
     cat <<EOF
+
      	╔═══════════════════════════╗
     	║ 1 - Create Database       ║
      	║ 2 - List Databases        ║
