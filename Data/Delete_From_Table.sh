@@ -19,7 +19,7 @@ function execute_sql_delete(){
     local table_name=$(echo "$sql_line" | awk -F';' '{gsub(/^[ \t]+|[ \t]+$/, "",$1);print $1}')
 
     if [[ ! -f "$table_name" ]]; then
-        echo "Error : Invalid Table Name"
+        echo "Error : Invalid Table Name or Invalid Selection (-_-;)・・・"
         return
     fi
 
@@ -30,25 +30,25 @@ function execute_sql_delete(){
 
     local where_operator=$(echo "$sql_line" | awk -F';' '{print $2}' | sed -e 's/[a-zA-Z]*//g' -e 's/[0-9]*//g' -e's/ //g')
     if ! [[ "$where_operator" =~ ^(==|>|<|>=|<=)$ ]]; then
-        echo "Error : Invalid Where Operator"
+        echo "Error : Invalid Where Operator (-_-;)・・・"
         return
     fi
 
     local where_column=$(echo "$sql_line" | awk -F';' '{print $2}' | awk -F"$where_operator" '{gsub(/^[ \t]+|[ \t]+$/, "",$1);print $1}')
     local where_column_field=$(awk -F'|' 'BEGIN{found=0} {if(NR==1){for(i=1;i<=NF;i++){if($i=="'$where_column'")found=i}}} END{print found}' "$table_name")
     if ((where_column_field == 0)); then
-        echo "Error : Invalid Where Column Name"
+        echo "Error : Invalid Where Column Name (-_-;)・・・"
         return
     fi
 
     local where_value=$(echo "$sql_line" | awk -F';' '{print $2}' | awk -F"$where_operator" '{gsub(/^[ \t]+|[ \t]+$/, "",$2);print $2}')
     local where_value_exist=$(awk -F'|' 'BEGIN{found=0} {if(NR!=1){if($"'$where_column_field'"=="'$where_value'")found=1}} END{print found}' "$table_name")
     if ((where_value_exist == 0)); then
-        echo "Warning : The Where Value does not exist in the Table "
+        echo "Warning : The Where Value does not exist in the Table (-_-;)・・・"
     fi
 
     awk -v where_value="$where_value" -i inplace -F'|' '{if(!($'$where_column_field' '$where_operator' where_value)){print $0}}' "$table_name"
-    echo "Deleted Successfully"
+    echo "Deleted Successfully (╯✧▽✧)╯"
 
 }
 
@@ -79,6 +79,6 @@ EOF
     2) 
     echo "You selected Back to Main Menu "
     exit 2 ;;
-    *) execute_sql_delete"$Select" ;;
+    *) execute_sql_delete "$Select" ;;
     esac
 done
