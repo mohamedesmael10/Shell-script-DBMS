@@ -62,15 +62,19 @@ while true; do
      #	╚═════════════════════════════════╝
     Database_connected "$db_name" 
     cat <<EOF
-     	
-        ╔══════════════════════════════════════════════════════════════════════╗
-        ║    e.g. UPDATE table_name; SET column1=value1; WHERE column2=value2; ║                                                                    ║                                                              
-        ╚══════════════════════════════════════════════════════════════════════╝
-     	╔═══════════════════════════╗
-    	║ 1 - Back to Database Menu ║
-     	║ 2 - Back to Main Menu     ║
-     	╚═══════════════════════════╝
+       
+       ╔══════════════════════════════════════════════════════════════════════╗
+       ║ e.g. UPDATE table_name; SET column1=value1; WHERE column2=value2;    ║
+       ╚══════════════════════════════════════════════════════════════════════╝                                                   
+       
+       
+       ╔═══════════════════════════╗
+       ║ 1 - Back to Database Menu ║
+       ║ 2 - Back to Main Menu     ║
+       ╚═══════════════════════════╝
+
 EOF
+
     tput setaf 5 #change font color to blue
     read -p "$(tput setaf 5)Enter SQL UPDATE Statement : " Select
     case $Select in

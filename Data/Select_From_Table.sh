@@ -71,9 +71,9 @@ function execute_sql_select() {
     while true; do
     tput setaf 2 
     cat <<EOF
-     	╔═══════════════════════════╗
-    	║ $db_name Connected        ║
-     	╚═══════════════════════════╝
+     	╔═══════════════════════════════════════════════╗
+    	║ $db_name Connected                            ║
+     	╚═══════════════════════════════════════════════╝
         ╔══════════════════════════════════════════════════════════════════════════════╗
         ║    e.g. SELECT *; FROM table_name;                                           ║
         ║    SELECT column; FROM table_name;                                           ║

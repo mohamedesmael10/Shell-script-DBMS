@@ -60,15 +60,20 @@ while true; do
      #	║   ║
      #	╚═════════════════════════════════╝
     Database_connected "$db_name" 
+
     cat <<EOF
+
         ╔══════════════════════════════════════════════════════════════════════╗
         ║    e.g. DELETE FROM table_name WHERE column[==,<,>,>=,<=]value;      ║
-        ║    DELETE FROM table_name;                                           ║                                                              
+        ║    DELETE FROM table_name;                                           ║        
+        ║                                                                      ║               
         ╚══════════════════════════════════════════════════════════════════════╝
+        
      	╔═══════════════════════════╗
     	║ 1 - Back to Database Menu ║
      	║ 2 - Back to Main Menu     ║
      	╚═══════════════════════════╝
+
 EOF
 
     tput setaf 5
