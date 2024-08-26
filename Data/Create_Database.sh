@@ -1,1 +1,4 @@
-echo "$(tput setaf 1)Implemented by: Mohamed Esmael & Hadeer Al-Bttal$(tput setaf 0)"
+#! /bin/bash
+echo -n "Enter the Database name : "
+read db_name
+mkdir -p  DBMS/$db_name 2>>error.log && echo "Created Successfully" || echo "Failed, DB Name May Exist"
