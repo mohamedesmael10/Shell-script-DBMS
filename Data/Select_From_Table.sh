@@ -9,35 +9,59 @@ function Database_connected() {
     # EX: | <TestDB ----- Connected> |
 
 }
-function execute_sql() {
-    sql_line=${entry//;/ }
-    table_name=$(echo "$sql_line" | awk '{print $3}')
-    if [[ ! -f "$table_name" ]]; then echo "Error : Invalid Table Name or Invalid Selection (-_-;)・・・ " ; return; fi
+function execute_sql_select() {
+    local sql_line=$1
+    local db_name=$2
 
-    select_column=$(echo "$sql_line" | awk '{print $1}')
-    select_column_field=$(awk -F'|' 'BEGIN{found=0} {if(NR==1){for(i=1;i<=NF;i++){if($i=="'$select_column'")found=i}}} END{print found}' "$table_name")
-    if [[ $select_column_field == 0 ]] && [[ $select_column != "*" ]]; then echo "Error : Invalid Selected Column Name (-_-;)・・・" && return; fi
+    # Remove SQL keywords and split into parts
+    local parts=($(echo "$sql_line" | sed -e 's/SELECT//g' -e 's/FROM//g' -e 's/WHERE//g' | tr ';' ' '))
 
-    if [[ "$sql_line" =~ WHERE ]]; then
-        where_column=$(echo "$sql_line" | awk '{print $5}')
-        where_column_field=$(awk -F'|' 'BEGIN{found=0} {if(NR==1){for(i=1;i<=NF;i++){if($i=="'$where_column'")found=i}}} END{print found}' "$table_name")
-        if [[ $where_column_field == 0 ]]; then echo "Error : Invalid Where Column Name (-_-;)・・・"; return; fi
+    # Get table name and check if it exists
+    local table_name=${parts[1]}
+    if [ ! -f "$table_name" ]; then
+        echo "Error: Invalid Table Name or Invalid Selection (-_-;)・・・"
+        return
+    fi
 
-        where_operator=$(echo "$sql_line" | awk '{print $4}')
-        where_value=$(echo "$sql_line" | awk '{print $6}')
-        where_value_exist=$(awk -F'|' 'BEGIN{found=0} {if(NR!=1){if($"'$where_column_field'"=="'$where_value'")found=1}} END{print found}' "$table_name")
-        if [[ $where_value_exist == 0 ]]; then echo "Warning : The Where Value does not exist in the Table (-_-;)・・・ "; fi
+    # Get selected column and check if it exists
+    local select_column=${parts[0]}
+    local select_column_field=$(awk -F'|' 'NR==1{for(i=1;i<=NF;i++){if($i=="'$select_column'")print i}}' "$table_name")
+    if [ -z "$select_column_field" ] && [ "$select_column" != "*" ]; then
+        echo "Error: Invalid Selected Column Name (-_-;)・・・"
+        return
+    fi
 
-        if [[ $select_column == "*" ]]; then
-            awk -v were_value="$where_value" -F'|' '{if(NR!=1){if($"'$where_column_field'" '$where_operator' were_value){print $0}}}' "$table_name"
-        else
-            awk -v were_value="$where_value" -F'|' '{if(NR!=1){if($'"$where_column_field"' '$where_operator' were_value){print $'"$select_column_field"'}}}' "$table_name"
-        fi
-    else
-        if [[ $select_column == "*" ]]; then
+    # Perform query
+    if [ ${#parts[@]} -eq 2 ]; then
+        if [ "$select_column" == "*" ]; then
             cat "$table_name"
         else
-            awk 'BEGIN{FS="|"}{print $'"$select_column_field"'}' "$table_name"
+            awk -v col=$select_column_field 'BEGIN{FS="|"}{print $col}' "$table_name"
+        fi
+    else
+        # Get where operator and check if it's valid
+        local where_operator=$(echo "${parts[2]}" | sed -e 's/[a-zA-Z]*//g' -e 's/[0-9]*//g' -e 's/ //g')
+        if ! [[ "$where_operator" =~ ^(==|>|<|>=|<=)$ ]]; then
+            echo "Error: Invalid Where Operator (-_-;)・・・"
+            return
+        fi
+
+        # Get where column and check if it exists
+        local where_column=$(echo "${parts[2]}" | awk -F"$where_operator" '{print $1}')
+        local where_column_field=$(awk -F'|' 'NR==1{for(i=1;i<=NF;i++){if($i=="'$where_column'")print i}}' "$table_name")
+        if [ -z "$where_column_field" ]; then
+            echo "Error: Invalid Where Column Name (-_-;)・・・"
+            return
+        fi
+
+        # Get where value
+        local where_value=$(echo "${parts[2]}" | awk -F"$where_operator" '{print $2}')
+
+        # Perform query with where clause
+        if [ "$select_column" == "*" ]; then
+            awk -v col=$where_column_field -v op=$where_operator -v val=$where_value 'BEGIN{FS="|"}{if(NR!=1 && $col op val)print $0}' "$table_name"
+        else
+            awk -v col=$select_column_field -v wcol=$where_column_field -v op=$where_operator -v val=$where_value 'BEGIN{FS="|"}{if(NR!=1 && $wcol op val)print $col}' "$table_name"
         fi
     fi
 }
@@ -73,7 +97,7 @@ EOF
     2) 
     echo "You selected Back to Main Menu "
     exit 2 ;;
-    *) execute_sql ;;
+    *) execute_sql_select ;;
          
     esac
 done
