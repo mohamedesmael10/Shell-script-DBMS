@@ -8,9 +8,44 @@ function Database_connected() {
     echo " Connected>$(tput setaf 2) |"
     # EX: | <TestDB ----- Connected> |
 
-# Function to display the database menu
-display_menu() {
+}
+function execute_sql() {
+    sql_line=${entry//;/ }
+    table_name=$(echo "$sql_line" | awk '{print $3}')
+    if [[ ! -f "$table_name" ]]; then echo "Error : Invalid Table Name" ; return; fi
+
+    select_column=$(echo "$sql_line" | awk '{print $1}')
+    select_column_field=$(awk -F'|' 'BEGIN{found=0} {if(NR==1){for(i=1;i<=NF;i++){if($i=="'$select_column'")found=i}}} END{print found}' "$table_name")
+    if [[ $select_column_field == 0 ]] && [[ $select_column != "*" ]]; then echo "Error : Invalid Selected Column Name" && return; fi
+
+    if [[ "$sql_line" =~ WHERE ]]; then
+        where_column=$(echo "$sql_line" | awk '{print $5}')
+        where_column_field=$(awk -F'|' 'BEGIN{found=0} {if(NR==1){for(i=1;i<=NF;i++){if($i=="'$where_column'")found=i}}} END{print found}' "$table_name")
+        if [[ $where_column_field == 0 ]]; then echo "Error : Invalid Where Column Name"; return; fi
+
+        where_operator=$(echo "$sql_line" | awk '{print $4}')
+        where_value=$(echo "$sql_line" | awk '{print $6}')
+        where_value_exist=$(awk -F'|' 'BEGIN{found=0} {if(NR!=1){if($"'$where_column_field'"=="'$where_value'")found=1}} END{print found}' "$table_name")
+        if [[ $where_value_exist == 0 ]]; then echo "Warning : The Where Value does not exist in the Table "; fi
+
+        if [[ $select_column == "*" ]]; then
+            awk -v were_value="$where_value" -F'|' '{if(NR!=1){if($"'$where_column_field'" '$where_operator' were_value){print $0}}}' "$table_name"
+        else
+            awk -v were_value="$where_value" -F'|' '{if(NR!=1){if($'"$where_column_field"' '$where_operator' were_value){print $'"$select_column_field"'}}}' "$table_name"
+        fi
+    else
+        if [[ $select_column == "*" ]]; then
+            cat "$table_name"
+        else
+            awk 'BEGIN{FS="|"}{print $'"$select_column_field"'}' "$table_name"
+        fi
+    fi
+}
+
     clear
+    db_name=$1
+    while true; do
+    tput setaf 2 
     cat <<EOF
      	╔═══════════════════════════╗
     	║ $db_name Connected        ║
@@ -28,35 +63,12 @@ display_menu() {
      	║ 2 - Back to Main Menu     ║
      	╚═══════════════════════════╝
 EOF
-}
 
-execute_sql() {
-    sql_line=$(echo "$1" | sed -e 's/SELECT//g' -e 's/FROM//g' -e 's/WHERE//g' | sed -e 's/select//g' -e 's/from//g' -e 's/where//g')
-
-    fields_no=$(echo "$sql_line" | awk -F';' 'END{print NF}')
-
-    table_name=$(echo "$sql_line" | awk -F';' '{gsub(/^[ \t]+|[ \t]+$/, "",$2);print $2}')
-    if [[ ! -f "$table_name" ]]; then
-        echo "Error : Invalid Table Name"
-        return
-    fi
-
-    select_column=$(echo "$sql_line" | awk -F';' '{gsub(/^[ \t]+|[ \t]+$/, "",$1);print $1}')
-    select_column_field=$(awk -F'|' 'BEGIN{found=0} {if(NR==1){for(i=1;i<=NF;i++){if($i=="'$select_column'")found=i}}} END{print found}' "$table_name")
-    if [[ $select_column_field == 0 ]] && [[ $select_column != "*" ]]; then
-        echo "Error : Invalid Selected Column Name"
-        return
-    fi
-
-    if ((fields_no == 3)); then
-        if [ "$select_column" == "*" ]; then
-            cat "$table_name"
-        else
-            awk 'BEGIN{FS="|"}{print $'"$select_column_field"' }' "$table_name"
-        fi
-        return
-    else
-        where_operator=$(echo "$sql_line" | awk -F';' '{print $3}' | sed -e 's/[a-zA-Z]*//g' -e 's/[0-9]*//g' -e's/ //g')
-        if ! [[ "$where_operator" =~ ^(==|>|<|>=|<=)$ ]]; then
-
-    }           
+    tput setaf 5
+    read -p "$(tput setaf 5)Enter SQL Statement : " Select
+    case $Select in
+    1) exit ;;
+    2) exit 2 ;;
+    *) execute_sql ;;
+    esac
+done
