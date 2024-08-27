@@ -40,7 +40,7 @@ function delete_and_check() {
         exit; fi
 }
 function insert_and_check() {
-    (../../insert_into.sh "$1")
+    (../../insert.sh "$1")
     result=$?
     if ((result == 1)); then
         echo "Error: Insertion failed. Check the logs."

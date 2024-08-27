@@ -58,7 +58,7 @@ EOF
 			ls DBMS 2>> error.log || echo "No Databases Found" ;;
         3) 
 			echo "You selected Connect Database "
-			. ./Connect_Database.sh ;;
+			./Connect_Database.sh ;;
         4) 
 			echo "You selected Drop Database "
 			. ./Drop_Database.sh ;;

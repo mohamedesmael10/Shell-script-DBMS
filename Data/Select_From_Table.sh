@@ -10,54 +10,41 @@ function Database_connected() {
 
 }
 function execute_sql_select() {
-    local sql_line=$1
-    local db_name=$2
+    # Remove SQL specific words
+    sql_line=$(echo "$entry" | sed -e 's/SELECT//Ig' -e 's/FROM//Ig' -e 's/WHERE//Ig')
 
-    # Remove SQL keywords and split into parts
-    local parts=($(echo "$sql_line" | sed -e 's/SELECT//g' -e 's/FROM//g' -e 's/WHERE//g' | tr ';' ' '))
+    # Get fields count
+    fields_no=$(echo "$sql_line" | awk -F';' 'END{print NF}')
 
-    # Get table name and check if it exists
-    local table_name=${parts[1]}
-    if [ ! -f "$table_name" ]; then
-        echo "Error: Invalid Table Name or Invalid Selection (-_-;)・・・"
-        return
-    fi
+    # Get table name and check its existence
+    table_name=$(echo "$sql_line" | awk -F';' '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')
+    if [[ ! -f "$table_name" ]]; then echo "Error: Invalid Table Name"; return; fi
 
-    # Get selected column and check if it exists
-    local select_column=${parts[0]}
-    local select_column_field=$(awk -F'|' 'NR==1{for(i=1;i<=NF;i++){if($i=="'$select_column'")print i}}' "$table_name")
-    if [ -z "$select_column_field" ] && [ "$select_column" != "*" ]; then
-        echo "Error: Invalid Selected Column Name (-_-;)・・・"
-        return
-    fi
+    # Get the selection column and check its existence
+    select_column=$(echo "$sql_line" | awk -F';' '{gsub(/^[ \t]+|[ \t]+$/, "", $1); print $1}')
+    select_column_field=$(awk -F'|' 'NR==1{for(i=1;i<=NF;i++){if($i=="'$select_column'")print i}}' "$table_name")
+    if [[ -z $select_column_field ]] && [[ $select_column != "*" ]]; then echo "Error: Invalid Selected Column Name"; return; fi
 
-    # Perform query
-    if [ ${#parts[@]} -eq 2 ]; then
+    if ((fields_no == 3)); then
         if [ "$select_column" == "*" ]; then
             cat "$table_name"
         else
             awk -v col=$select_column_field 'BEGIN{FS="|"}{print $col}' "$table_name"
         fi
+        return
     else
-        # Get where operator and check if it's valid
-        local where_operator=$(echo "${parts[2]}" | sed -e 's/[a-zA-Z]*//g' -e 's/[0-9]*//g' -e 's/ //g')
-        if ! [[ "$where_operator" =~ ^(==|>|<|>=|<=)$ ]]; then
-            echo "Error: Invalid Where Operator (-_-;)・・・"
-            return
-        fi
+        # Get and check the where operator
+        where_operator=$(echo "$sql_line" | awk -F';' '{print $3}' | sed -e 's/[a-zA-Z]*//g' -e 's/[0-9]*//g' -e 's/ //g')
+        if ! [[ "$where_operator" =~ ^(==|>|<|>=|<=)$ ]]; then echo "Error: Invalid Where Operator"; return; fi
 
-        # Get where column and check if it exists
-        local where_column=$(echo "${parts[2]}" | awk -F"$where_operator" '{print $1}')
-        local where_column_field=$(awk -F'|' 'NR==1{for(i=1;i<=NF;i++){if($i=="'$where_column'")print i}}' "$table_name")
-        if [ -z "$where_column_field" ]; then
-            echo "Error: Invalid Where Column Name (-_-;)・・・"
-            return
-        fi
+        # Get the column in the WHERE condition and check its existence
+        where_column=$(echo "$sql_line" | awk -F';' '{print $3}' | awk -F"$where_operator" '{gsub(/^[ \t]+|[ \t]+$/, "", $1); print $1}')
+        where_column_field=$(awk -F'|' 'NR==1{for(i=1;i<=NF;i++){if($i=="'$where_column'")print i}}' "$table_name")
+        if [[ -z $where_column_field ]]; then echo "Error: Invalid Where Column Name"; return; fi
 
-        # Get where value
-        local where_value=$(echo "${parts[2]}" | awk -F"$where_operator" '{print $2}')
+        # Get the value in the WHERE condition
+        where_value=$(echo "$sql_line" | awk -F';' '{print $3}' | awk -F"$where_operator" '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')
 
-        # Perform query with where clause
         if [ "$select_column" == "*" ]; then
             awk -v col=$where_column_field -v op=$where_operator -v val=$where_value 'BEGIN{FS="|"}{if(NR!=1 && $col op val)print $0}' "$table_name"
         else
@@ -65,7 +52,6 @@ function execute_sql_select() {
         fi
     fi
 }
-
     clear
     db_name=$1
     while true; do

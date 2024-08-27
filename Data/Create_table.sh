@@ -1,68 +1,78 @@
 #!/bin/bash
-
-# Function to display the database connection message
 function Database_connected() {
     db_name=$1
+    typeset -i filler_length
     filler_length=$((54 - ${#db_name}))
     echo -n "| $(tput setaf 3)<$db_name "
-    for ((counter = 0; counter < filler_length; counter++)); do 
-        echo -n "-"; 
-    done
+    for ((counter = 0; counter < filler_length; counter++)); do echo -n "-"; done
     echo " Connected>$(tput setaf 2) |"
 }
 
-# Function to create a table with validation checks
 function create_table() {
-    # Check if the SQL statement is a valid CREATE TABLE statement
-    if ! [[ "$entry" =~ ^(CREATE|create)\ TABLE ]]; then 
-        echo "Invalid SQL Statement (-_-;)・・・"
+    # Check if the SQL statement starts with CREATE TABLE
+    if ! [[ "$entry" =~ ^[[:space:]]*CREATE[[:space:]]+TABLE ]]; then
+        echo "Invalid SQL Statement"
         return
     fi
     
-    # Extract table name and check its existence
-    table_name=$(echo "$entry" | sed -e 's/CREATE TABLE //I' | awk -F'(' '{gsub(/^[ \t]+|[ \t]+$/, "",$1);print $1}')
+    # Remove SQL specific words and extract table name and columns
+    sql_line=$(echo "$entry" | sed -e 's/CREATE[[:space:]]*TABLE[[:space:]]*//' -e 's/[[:space:]]*;$//')
+    table_name=$(echo "$sql_line" | awk -F'(' '{gsub(/^[ \t]+|[ \t]+$/, "",$1);print $1}')
+    
+    # Check if the table already exists
     if [[ -f "$table_name" ]]; then
-        echo "Error: Table Name Exists (-_-;)・・・"
+        echo "Error: Table Name Exists"
         return
     fi
-
+    
     # Create table files
-    touch "$table_name" ".$table_name" 2>>../../error.log || { echo "Failed"; return; }
-
-    # Extract columns and clean them
-    sql_line=$(echo "$entry" | awk -F'(' '{print $2}' | awk -F')' '{gsub(/^[ \t]+|[ \t]+$/, "",$1); print $1}')
-    table_columns_number=$(echo "$sql_line" | awk -F',' '{print NF}')
-
+    touch "$table_name" 2>>../../error.log || { echo "Failed to create table file"; return; }
+    touch ".$table_name" 2>>../../error.log || { echo "Failed to create table metadata file"; return; }
+    
+    # Clean up column definitions
+    sql_line=$(echo "$sql_line" | awk -F'(' '{print $2}' | awk -F')' '{ gsub(/^[ \t]+|[ \t]+$/, "",$1); print $1}')
+    
+    # Get the number of columns
+    table_columns_number=$(echo "$sql_line" | awk -F',' 'END{print NF}')
+    
     has_pk=0
+    table_fields=""
     table_headers=""
     
-    # Check for invalid data type or multiple primary keys
-    for ((i = 1; i <= table_columns_number; i++)); do
-        column_details=$(echo "$sql_line" | awk -F',' -v col=$i '{print $col}' | awk '{$1=$1};1')
-        column_name=$(echo "$column_details" | awk '{print $1}')
-        data_type=$(echo "$column_details" | awk '{print $2}')
-        primary_key=$(echo "$column_details" | awk '{print $3}')
-
+    # Check for invalid data types or more than one primary key
+    for ((i = 1; i <= $table_columns_number; i++)); do
+        column_definition=$(echo "$sql_line" | awk -F',' '{print $'$i'}')
+        column_name=$(echo "$column_definition" | awk '{print $1}')
+        data_type=$(echo "$column_definition" | awk '{print $2}')
+        primary_key=$(echo "$column_definition" | awk '{print $3}')
+        
         if [[ "$data_type" != "txt" && "$data_type" != "int" ]]; then
-            echo "Error: Invalid Data Type in Column (-_-;)・・・'$i'"
+            echo "Error: Invalid Data Type in Column ['$i']"
             return
         fi
-
+        
         if [[ "$primary_key" == "pk" ]]; then
-            if (( has_pk == 0 )); then
+            if ((has_pk == 0)); then
                 has_pk=1
             else
-                echo "Error: More Than One Primary Key (-_-;)・・・"
+                echo "Error: More Than One Primary Key"
                 return
             fi
         fi
-
-        table_headers+="$column_name|$data_type|$primary_key "
-        echo "$column_name|$data_type|$primary_key" >>".$table_name" 2>>../../error.log || { echo "Failed"; return; }
+        
+        table_headers="${table_headers}|${column_name}"
+        
+        if [[ "$primary_key" == "pk" ]]; then
+            table_fields="${table_fields}${column_name}|${data_type}|${primary_key}"
+        else
+            table_fields="${table_fields}${column_name}|${data_type}"
+        fi
+        
+        echo "$table_fields" >> ".$table_name" 2>>../../error.log || { echo "Failed to write table fields"; return; }
     done
-
-    echo "$table_headers" | sed 's/ / | /g' >>"$table_name"
-    echo "Table '$table_name' created successfully (╯✧▽✧)╯"
+    
+    echo "${table_headers:1}" >> "$table_name"
+    echo "Created Successfully"
 }
 
 clear
