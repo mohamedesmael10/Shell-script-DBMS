@@ -8,16 +8,16 @@ create_database() {
 
     # Check if the database already exists
     if [ -d "$db_path" ]; then
-        echo "The database '$db_name' already exists!"
+        echo "The database '$db_name' already exists! (-_-;)・・・"
         exit 1
     fi
 
     # Create the database directory
     mkdir -p "$db_path" 2>>error.log
     if [ $? -eq 0 ]; then
-        echo "Welcome! Your database '$db_name' is ready!"
+        echo "Welcome! Your database '$db_name' is ready! (╯✧▽✧)╯"
     else
-        echo "Ops.. Try again!"
+        echo "Ops.. Try again! (-_-;)・・・"
         exit 1
     fi
 }

@@ -22,7 +22,7 @@ function sql_insert() {
     echo "Debug: Table Name = $table_name"
     
     if [[ ! -f "$table_name" ]]; then
-        echo "Error : Invalid Table Name"
+        echo "Error : Invalid Table Name (・_・;)"
         return
     fi
 
@@ -32,11 +32,11 @@ function sql_insert() {
 
     # Get insert columns number
     insert_columns_number=$(echo "$sql_line" | awk -F',' 'END{print NF}')
-    echo "Debug: Insert Columns Number = $insert_columns_number"
+    echo "Debug: Insert Columns Number = $insert_columns_number (・_・;)"
 
     # Check if the number of values matches the number of table columns
     if ((insert_columns_number != table_columns_number)); then
-        echo "Error : Invalid Columns Number, Must Be $table_columns_number Values"
+        echo "Error : Invalid Columns Number, Must Be $table_columns_number Values (・_・;)"
         return
     fi
 
@@ -48,14 +48,14 @@ function sql_insert() {
         is_pk=$(awk -F'|' '{if (NR=="'$i'") { print $3}}' ".$table_name")
         
         case $value in
-            [a-zA-Z]*) if ((col_data_type != "txt")); then echo "Error : Invalid Value Data Type"; return; fi ;;
-            [0-9]*) if ((col_data_type != "int")); then echo "Error : Invalid Value Data Type"; return; fi ;;
+            [a-zA-Z]*) if ((col_data_type != "txt")); then echo "Error : Invalid Value Data Type (・_・;)"; return; fi ;;
+            [0-9]*) if ((col_data_type != "int")); then echo "Error : Invalid Value Data Type (・_・;)"; return; fi ;;
             *) echo "Error : Invalid Value"; return ;;
         esac
         
         if ((is_pk == "pk")); then
             value_exist=$(awk -v new_value="$value" -F'|' 'BEGIN{found=0} {if(NR!=1){if($'$i'==new_value)found=1}} END{print found}' "$table_name")
-            if ((value_exist == 1)); then echo "Error : Primary Key Exists"; return; fi
+            if ((value_exist == 1)); then echo "Error : Primary Key Exists (・_・;)"; return; fi
         fi
         
         record=$(echo "$record" | awk -v value="$value" -F'|' '{OFS=FS}{$"'$i'"=value; print}')
@@ -63,7 +63,7 @@ function sql_insert() {
     
     # Append the Record
     echo "$record" >>"$table_name"
-    echo "Inserted Successfully"
+    echo "Inserted Successfully (╯✧▽✧)╯"
 }
 
 clear

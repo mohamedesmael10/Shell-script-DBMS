@@ -9,15 +9,15 @@ if [ -d "DBMS/$name" ]; then
     read -p "Are you sure you want to delete '$name'? (Y/N): " choice
     case $choice in
         [yY]|[yY][eE][sS])
-            rm -r "DBMS/$name" && echo "$name deleted successfully" || echo "Failed to delete $name"
+            rm -r "DBMS/$name" && echo "$name deleted successfully (╯✧▽✧)╯" || echo "Failed to delete $name (-_-;)・・・"
             ;;
         [nN]|[nN][oO])
-            echo "Operation canceled"
+            echo "Operation canceled (・_・;)"
             ;;
         *)
-            echo "Invalid option. Please enter Y or N."
+            echo "Invalid option. Please enter Y or N. (・_・;)"
             ;;
     esac
 else
-    echo "Database '$name' does not exist."
+    echo "Database '$name' does not exist. (・_・;)"
 fi

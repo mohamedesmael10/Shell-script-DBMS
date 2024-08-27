@@ -11,18 +11,18 @@ if [ -f "$name" ]; then
         [yY]|[yY][eE][sS])
             # Perform the deletion
             if rm "$name" "$name.bak"; then
-                echo "Table '$name' deleted successfully."
+                echo "Table '$name' deleted successfully (╯✧▽✧)╯"
             else
-                echo "Failed to delete table '$name'."
+                echo "Failed to delete table '$name' (-_-;)・・・"
             fi
             ;;
         [nN]|[nN][oO])
-            echo "Operation canceled."
+            echo "Operation canceled (・_・;)"
             ;;
         *)
-            echo "Invalid option. Please enter Y or N."
+            echo "Invalid option. Please enter Y or N. (・_・;)"
             ;;
     esac
 else
-    echo "Table '$name' does not exist."
+    echo "Table '$name' does not exist. (・_・;)"
 fi

@@ -17,7 +17,7 @@ function execute_sql_delete() {
 
     # get table and check its existence
     table_name=$(echo "$sql_line" | awk -F';' '{gsub(/^[ \t]+|[ \t]+$/, "",$1);print $1}')
-    if [[ ! -f "$table_name" ]]; then echo "Error : Invalid Table Name" ; return; fi
+    if [[ ! -f "$table_name" ]]; then echo "Error : Invalid Table Name (・_・;)	" ; return; fi
 
     if ((fields_no == 2)); then
         awk -F'|' '{if(NR==1){print $0}}' "$table_name" > temp && mv temp "$table_name"
@@ -25,22 +25,22 @@ function execute_sql_delete() {
     else
         # get and check the where operator
         where_operator=$(echo "$sql_line" | awk -F';' '{print $2}' | sed -e 's/[a-zA-Z]*//g' -e 's/[0-9]*//g' -e 's/ //g')
-        if ! [[ "$where_operator" =~ ^(==|>|<|>=|<=)$ ]] ; then echo "Error : Invalid Where Operator"; return; fi
+        if ! [[ "$where_operator" =~ ^(==|>|<|>=|<=)$ ]] ; then echo "Error : Invalid Where Operator (・_・;)"; return; fi
 
         # get the column in the WHERE condition and check its existence
         where_column=$(echo "$sql_line" | awk -F';' '{print $2}' | awk -F''$where_operator'' '{gsub(/^[ \t]+|[ \t]+$/, "",$1);print $1}')
         where_column_field=$(awk -F'|' 'BEGIN{found=0} {if(NR==1){for(i=1;i<=NF;i++){if($i=="'$where_column'")found=i}}} END{print found}' "$table_name")
-        if ((where_column_field == 0)); then echo "Error : Invalid Where Column Name"; return; fi
+        if ((where_column_field == 0)); then echo "Error : Invalid Where Column Name (・_・;)"; return; fi
 
         # get the value in the WHERE condition and check its existence
         where_value=$(echo "$sql_line" | awk -F';' '{print $2}' | awk -F''$where_operator'' '{gsub(/^[ \t]+|[ \t]+$/, "",$2);print $2}')
         where_value_exist=$(awk -F'|' 'BEGIN{found=0} {if(NR!=1){if($"'$where_column_field'"=="'$where_value'")found=1}} END{print found}' "$table_name")
-        if ((where_value_exist == 0)); then echo "Warning : The Where Value does not exist in the Table "; fi
+        if ((where_value_exist == 0)); then echo "Warning : The Where Value does not exist in the Table (・_・;)"; fi
 
         # Delete the records
         awk -v were_value="$where_value" -F'|' '{if(!($'$where_column_field'  '$where_operator' were_value)){print $0}}' "$table_name" > temp && mv temp "$table_name"
     fi
-    echo "Deleted Successfully"
+    echo "Deleted Successfully (╯✧▽✧)╯"
 }
 
 clear

@@ -15,9 +15,9 @@ function update_and_check() {
     (../../Update_Table.sh "$1")
     result=$?
     if ((result == 1)); then
-        echo "Error: Update failed. Check the logs."
+        echo "Error: Update failed. Check the logs. (・_・;)"
     elif ((result == 2)); then 
-        echo "Critical error: Exiting script."
+        echo "Critical error: Exiting script. (-_-;)・・・"
         exit; fi
 }
 
@@ -25,36 +25,36 @@ function select_and_check() {
     (../../Select_From_Table.sh "$1")
     result=$?
     if ((result == 1)); then
-        echo "Error: Select failed. Check the logs."
+        echo "Error: Select failed. Check the logs. (・_・;)"
     elif ((result == 2)); then 
-        echo "Critical error: Exiting script."
+        echo "Critical error: Exiting script. (-_-;)・・・"
         exit; fi
 }
 function delete_and_check() {
     (../../Delete_From_Table.sh "$1")
     result=$?
     if ((result == 1)); then
-        echo "Error: Delete failed. Check the logs."
+        echo "Error: Delete failed. Check the logs. (・_・;)"
     elif ((result == 2)); then 
-        echo "Critical error: Exiting script."
+        echo "Critical error: Exiting script. (-_-;)・・・"
         exit; fi
 }
 function insert_and_check() {
     (../../insert.sh "$1")
     result=$?
     if ((result == 1)); then
-        echo "Error: Insertion failed. Check the logs."
+        echo "Error: Insertion failed. Check the logs. (・_・;)"
     elif ((result == 2)); then 
-        echo "Critical error: Exiting script."
+        echo "Critical error: Exiting script. (-_-;)・・・"
         exit; fi
 }
 function create_and_check() {
     (../../Create_table.sh "$1")
     result=$?
     if ((result == 1)); then
-        echo "Error : Check the logs"
+        echo "Error : Check the logs. (・_・;)"
     elif ((result == 2)); then 
-        echo "Critical error: Exiting script."
+        echo "Critical error: Exiting script. (-_-;)・・・"
         exit; fi
 }
 

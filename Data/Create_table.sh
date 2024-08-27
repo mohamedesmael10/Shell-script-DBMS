@@ -11,7 +11,7 @@ function Database_connected() {
 function create_table() {
     # Check if the SQL statement starts with CREATE TABLE
     if ! [[ "$entry" =~ ^[[:space:]]*CREATE[[:space:]]+TABLE ]]; then
-        echo "Invalid SQL Statement"
+        echo "Invalid SQL Statement (-_-;)・・・"
         return
     fi
     
@@ -21,13 +21,13 @@ function create_table() {
     
     # Check if the table already exists
     if [[ -f "$table_name" ]]; then
-        echo "Error: Table Name Exists"
+        echo "Error: Table Name Exists (-_-;)・・・"
         return
     fi
     
     # Create table files
-    touch "$table_name" 2>>../../error.log || { echo "Failed to create table file"; return; }
-    touch ".$table_name" 2>>../../error.log || { echo "Failed to create table metadata file"; return; }
+    touch "$table_name" 2>>../../error.log || { echo "Failed to create table file (・_・;)"; return; }
+    touch ".$table_name" 2>>../../error.log || { echo "Failed to create table metadata file (・_・;)"; return; }
     
     # Clean up column definitions
     sql_line=$(echo "$sql_line" | awk -F'(' '{print $2}' | awk -F')' '{ gsub(/^[ \t]+|[ \t]+$/, "",$1); print $1}')
@@ -47,7 +47,7 @@ function create_table() {
         primary_key=$(echo "$column_definition" | awk '{print $3}')
         
         if [[ "$data_type" != "txt" && "$data_type" != "int" ]]; then
-            echo "Error: Invalid Data Type in Column ['$i']"
+            echo "Error: Invalid Data Type in Column ['$i'] (-_-;)・・・"
             return
         fi
         
@@ -55,7 +55,7 @@ function create_table() {
             if ((has_pk == 0)); then
                 has_pk=1
             else
-                echo "Error: More Than One Primary Key"
+                echo "Error: More Than One Primary Key (-_-;)・・・"
                 return
             fi
         fi
@@ -68,11 +68,11 @@ function create_table() {
             table_fields="${table_fields}${column_name}|${data_type}"
         fi
         
-        echo "$table_fields" >> ".$table_name" 2>>../../error.log || { echo "Failed to write table fields"; return; }
+        echo "$table_fields" >> ".$table_name" 2>>../../error.log || { echo "Failed to write table fields (-_-;)・・・"; return; }
     done
     
     echo "${table_headers:1}" >> "$table_name"
-    echo "Created Successfully"
+    echo "Created Successfully (╯✧▽✧)╯"
 }
 
 clear
