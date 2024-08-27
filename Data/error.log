@@ -1,11 +1,1 @@
-ls: cannot access 'Database': No such file or directory
-ls: cannot access 'Database': No such file or directory
-./Connect_Database.sh: line 3: cd: Data/m: No such file or directory
-Connect_Database.sh: line 3: cd: DBMS/mm: No such file or directory
-ls: cannot access 'Database': No such file or directory
-./Connect_Database.sh: line 3: cd: DBMS/mmm: No such file or directory
-ls: cannot access 'Database': No such file or directory
-ls: cannot access 'Database': No such file or directory
-./Connect_Database.sh: line 3: cd: DBMS/oo: No such file or directory
-./Connect_Database.sh: line 3: cd: DBMS/oo: No such file or directory
-./Connect_Database.sh: line 3: cd: DBMS/oo: No such file or directory
+awk: not an option: -i
