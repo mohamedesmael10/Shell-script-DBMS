@@ -12,7 +12,7 @@ function Database_connected() {
 
 
 function update_and_check() {
-    (../../Update.sh "$1")
+    (../../Update_Table.sh "$1")
     result=$?
     if ((result == 1)); then
         echo "Error: Update failed. Check the logs."
@@ -31,7 +31,7 @@ function select_and_check() {
         exit; fi
 }
 function delete_and_check() {
-    (../../Delete_from.sh "$1")
+    (../../Delete_From_Table.sh "$1")
     result=$?
     if ((result == 1)); then
         echo "Error: Delete failed. Check the logs."
