@@ -95,7 +95,7 @@ EOF
         ls ;;
     3)
         echo "You selected Drop Database "
-        . ../../drop_tb.sh ;;
+        . ../../Drop_Table.sh ;;
     4)
         echo "You selected Insert into Table  "
         insert_and_check "$db_name" ;;
