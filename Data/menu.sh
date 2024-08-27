@@ -12,7 +12,7 @@ function Database_connected() {
 
 
 function update_and_check() {
-    (../../Update_Table.sh "$1")
+    (../../Update_Table.sh"$1")
     result=$?
     if ((result == 1)); then
         echo "Error: Update failed. Check the logs."
@@ -49,7 +49,7 @@ function insert_and_check() {
         exit; fi
 }
 function create_and_check() {
-    (../../create_table.sh "$1")
+    (../../Create_table.sh "$1")
     result=$?
     if ((result == 1)); then
         echo "Error : Check the logs"

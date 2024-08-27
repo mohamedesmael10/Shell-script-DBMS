@@ -1,7 +1,5 @@
 #!/bin/bash
-
-while true; do
-	tput setaf 7 ;
+    tput setaf 7 ;
 	cat <<EOF
 	⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣤⣄⠀
 	⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣧
@@ -20,6 +18,8 @@ while true; do
 	⠀⠀⢰⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠋⠁⠀⠀⠀⠀⠀⠀
 	⠀⠀⠘⠻⡧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 EOF
+while true; do
+	
 
 	tput setaf 1
 	cat <<EOF
@@ -55,7 +55,7 @@ EOF
 			. ./Create_Database.sh ;;
         2) 
 			echo "You selected List Databases "
-			ls Database 2>> error.log || echo "No Databases Found" ;;
+			ls DBMS 2>> error.log || echo "No Databases Found" ;;
         3) 
 			echo "You selected Connect Database "
 			. ./Connect_Database.sh ;;
