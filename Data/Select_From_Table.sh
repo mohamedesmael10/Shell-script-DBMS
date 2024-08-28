@@ -58,9 +58,10 @@ while true; do
     cat <<EOF
 
         ╔══════════════════════════════════════════════════════════════════════╗
-        ║    e.g. DELETE FROM table_name WHERE column[==,<,>,>=,<=]value;      ║
-        ║    DELETE FROM table_name;                                           ║        
-        ║                                                                      ║               
+        ║  e.g. SELECT *; FROM table_name;                                     ║
+        ║  SELECT column; FROM table_name;                                     ║        
+        ║  SELECT column ; FROM table_name ; WHERE column[==,<,>,>=,<=]value ; ║
+        ║  SELECT * ; FROM table_name ; WHERE column[==,<,>,>=,<=]value        ║               
         ╚══════════════════════════════════════════════════════════════════════╝
         
      	╔═══════════════════════════╗
@@ -71,7 +72,7 @@ while true; do
 EOF
 
     tput setaf 5
-    read -p "$(tput setaf 5)Enter SQL Delete Statement : " entry
+    read -p "$(tput setaf 5)Enter SQL Select Statement : " entry
     case $entry in
     1) 
     echo "You selected Back to Database Menu"
