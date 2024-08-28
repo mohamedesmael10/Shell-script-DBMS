@@ -1,7 +1,8 @@
 # Bash Shell Scripting Database Management System (DBMS)
 
 ## Introduction
-We, as DEPI trainers, are pleased to announce the completion of a project: a Bash Shell Scripting Database Management System (DBMS) built by @hadeer-tsu and myself. This project provides a user-friendly, command-line interface (CLI) for creating, managing, and interacting with databases.
+We, as DEPI trainers, are pleased to announce the completion of a project: a Bash Shell Scripting Database Management System (DBMS) built by [@mohamedesmael10](https://github.com/mohamedesmael10) and [@hadeer-tsu](https://github.com/hadeer-tsu). This project provides a command-line interface (CLI) for creating, managing, and interacting with databases.
+
 
 ## Key Features
 
@@ -51,4 +52,4 @@ Future enhancements could include:
 ![Screenshot 4](https://github.com/mohamedesmael10/Shell-script-DBMS/raw/main/Shots/4.png)
 ![Screenshot 5](https://github.com/mohamedesmael10/Shell-script-DBMS/raw/main/Shots/5.png)
 ![Screenshot 6](https://github.com/mohamedesmael10/Shell-script-DBMS/raw/main/Shots/6.png)
-![Final Video](https://github.com/mohamedesmael10/Shell-script-DBMS/raw/main/Shots/Final.mp4)
+
