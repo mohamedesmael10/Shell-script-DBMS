@@ -8,14 +8,7 @@ if [ -f "$name" ]; then
     # Confirm with the user before deletion
     read -p "Are you sure you want to delete the table '$name'? (Y/N): " choice
     case $choice in
-        [yY]|[yY][eE][sS])
-            # Perform the deletion
-            if rm "$name" "$name.bak"; then
-                echo "Table '$name' deleted successfully (╯✧▽✧)╯"
-            else
-                echo "Failed to delete table '$name' (-_-;)・・・"
-            fi
-            ;;
+        [yY]|[yY][eE][sS]) rm $name .$name; echo "Table Deleted Successfully (╯✧▽✧)╯" ;;
         [nN]|[nN][oO])
             echo "Operation canceled (・_・;)"
             ;;
